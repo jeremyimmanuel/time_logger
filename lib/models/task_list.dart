@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/task.dart';
 
@@ -36,8 +35,8 @@ class DatabaseHelper {
   // Initialize database
   Future<Database> initializeDatabase() async {
     // Get directory path for both android and iOS to store db file
-    Directory dir = await getApplicationDocumentsDirectory();
-    String path = join(dir.path + 'tasks.db');
+    var dirPath = await getDatabasesPath();
+    String path = join(dirPath, 'tasks.db');
 
     var tasksDB = await openDatabase(path, version: 1, onCreate: _createDB);
     return tasksDB;
