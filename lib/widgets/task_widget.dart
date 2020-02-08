@@ -32,6 +32,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver{
 
   @override
   void dispose() {
+    sw.stop();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

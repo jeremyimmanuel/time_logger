@@ -13,7 +13,7 @@ class SWPage extends StatefulWidget {
   _SWPageState createState() => _SWPageState();
 }
 
-class _SWPageState extends State<SWPage>{
+class _SWPageState extends State<SWPage> {
   DatabaseHelper databaseHelper = DatabaseHelper();
 
   List<Task> tl = [];
@@ -47,6 +47,10 @@ class _SWPageState extends State<SWPage>{
     });
   }
 
+  Future<void> removeTaskInDb(String id) async {
+    await databaseHelper.deleteTask(id);
+  }
+
   void _showAddNewTask() {
     showModalBottomSheet(
         context: context,
@@ -57,19 +61,46 @@ class _SWPageState extends State<SWPage>{
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     updateListView();
     return Scaffold(
       appBar: AppBar(
         title: Text('Simple Time Logger'),
       ),
-      body: Column(
-        children: tl.isEmpty
-            ? <Widget>[]
-            : tl
-                .map((t) => TaskWidget(
-                      t: t,
-                    ))
-                .toList(),
+      body: Container(
+        // TODO: adjust height?
+        height: mediaQuery.size.height * .8,
+        child: ListView.builder(
+          itemBuilder: (ctx, i) {
+            final t = tl[i];
+            return Dismissible(
+              key: Key(t.id),
+              child: TaskWidget(t: t),
+              onDismissed: (direction) {
+                removeTaskInDb(t.id);
+                setState(() {
+                  tl.removeAt(i);
+                });
+              },
+              direction: DismissDirection.startToEnd,
+              background: Container(
+                child: Center(
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.redAccent,
+                  ),
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red[200],
+                  border: Border.all(
+                    color: Colors.redAccent,
+                  ),
+                ),
+              ),
+            );
+          },
+          itemCount: tl.length,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
