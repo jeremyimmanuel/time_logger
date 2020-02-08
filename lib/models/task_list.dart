@@ -67,7 +67,7 @@ class DatabaseHelper {
 
   Future<int> deleteTask(String id) async {
     var db = await this.database;
-    int result = await db.rawDelete('DELETE FROM $taskTable WHERE $colId = $id');
+    int result = await db.delete(taskTable, where: '$colId = ?', whereArgs: [id]);
     return result;
   }
 

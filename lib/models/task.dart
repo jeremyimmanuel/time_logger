@@ -87,13 +87,7 @@ class Task {
   }
 
   Map<String, dynamic> toMap(){
-    print(category.toString());
-    print('id: $id');
-    print('event: $event');
-    print('category: ${tcString()}');
-    print('elapsed: ${elapsed.toString()}');
     return {
-      // TODO: revert to actual values
       'id' : id,
       'event' : event,
       'category' : tcString(), //tcString(),
