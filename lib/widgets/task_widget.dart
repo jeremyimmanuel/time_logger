@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -19,16 +20,28 @@ class TaskWidget extends StatefulWidget {
 
 class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   DatabaseHelper _databaseHelper = DatabaseHelper();
-  String _timeStamp = '00:00:00';
+  String _timeStamp;
+  
+  // Dur to display
+  Duration _totalDur;
+
+  // Local duration
+  Duration _currDur = Duration.zero;
 
   bool _isRunning;
-  final sw = Stopwatch();
-  final dur = const Duration(milliseconds: 20);
+  // final sw = Stopwatch();
+  final int _min = 989;
+  final int _diff = 6;
+  Random r = Random();
+  // final dur = const Duration(milliseconds: 990, microseconds: 400);
   Timer timer;
 
   @override
   void initState() {
+    _totalDur = widget.t.elapsed;
+    _timeStamp = _totalDur.toString().split('.')[0].padLeft(8, '0');
     _isRunning = widget.t.isRunning;
+    print('new version');
     if (_isRunning) {
       startSW();
     } else {
@@ -40,7 +53,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    sw.stop();
+    // sw.stop();
     timer.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -54,45 +67,57 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
         _databaseHelper.updateTask(widget.t);
         break;
-      case AppLifecycleState.paused: // iOS background ?
+      case AppLifecycleState.paused:
+        widget.t.addDuration(_totalDur);
         _databaseHelper.updateTask(widget.t);
         break;
       case AppLifecycleState.inactive:
+        widget.t.addDuration(_currDur);
         _databaseHelper.updateTask(widget.t).then((_) => print('updated db'));
         print('${widget.t.event} isRunning ? ${widget.t.isRunning}');
         print(DateTime.now().toString());
-        break; 
+        break;
       default:
     }
   }
 
   void startSW() {
+    int rInt = _min + r.nextInt(_diff);
+    int rMicro = r.nextInt(999);
+    Duration dur = Duration(
+      milliseconds: rInt,
+      microseconds: rMicro,
+    );
     timer = Timer(dur, keeprunning);
-    sw.start();
-    setState(() {
-      _isRunning = true;
-    });
-    widget.t.toggleIsRunning(_isRunning);
-    // TODO: find a way to updateTask right before app is killed
-    _databaseHelper.updateTask(widget.t);
-    
+    if (!_isRunning) {
+      // sw.start();
+      setState(() {
+        _isRunning = true;
+      });
+      widget.t.toggleIsRunning(_isRunning);
+      // TODO: find a way to updateTask right before app is killed
+      _databaseHelper.updateTask(widget.t);
+    }
   }
 
   void keeprunning() {
-    if (sw.isRunning) {
+    if (_isRunning) {
       startSW();
     }
     setState(() {
-      _timeStamp = sw.elapsed.inHours.toString().padLeft(2, '0') +
+      print(DateTime.now());
+      _totalDur += Duration(seconds: 1);
+      _currDur += Duration(seconds: 1);
+      _timeStamp = _totalDur.inHours.toString().padLeft(2, '0') +
           ':' +
-          (sw.elapsed.inMinutes % 60).toString().padLeft(2, '0') +
+          (_totalDur.inMinutes % 60).toString().padLeft(2, '0') +
           ':' +
-          (sw.elapsed.inSeconds % 60).toString().padLeft(2, '0');
+          (_totalDur.inSeconds % 60).toString().padLeft(2, '0');
     });
   }
 
   void stopSW() {
-    sw.stop();
+    // sw.stop();
     setState(() {
       _isRunning = false;
     });
@@ -123,9 +148,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       trailing: FloatingActionButton(
         backgroundColor: Colors.grey,
         child: Icon(
-          sw.isRunning ? Icons.pause : Icons.play_arrow,
+          _isRunning ? Icons.pause : Icons.play_arrow,
         ),
-        onPressed: sw.isRunning ? stopSW : startSW,
+        onPressed: _isRunning ? stopSW : startSW,
       ),
     );
   }

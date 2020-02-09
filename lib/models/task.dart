@@ -15,6 +15,8 @@ class Task {
   // Right before app being killed
   DateTime lastTime;
 
+  final Stopwatch sw = Stopwatch();
+
   // 0 for false, 1 for true
   int isRunningInt;
 
@@ -22,7 +24,7 @@ class Task {
     this.id,
     this.event,
     this.category,
-    this.elapsed = const Duration(seconds: 0),
+    this.elapsed = Duration.zero,
     this.isRunningInt = 1,
   });
 
@@ -60,6 +62,13 @@ class Task {
       default:
         return true;
     }
+  }
+
+  Duration get elapsedSinceLastRun {
+    if (isRunning)
+      return DateTime.now().difference(lastTime);
+    else 
+      return elapsed;
   }
 
   void addOneSecond(){
