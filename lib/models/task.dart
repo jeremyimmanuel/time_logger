@@ -59,11 +59,11 @@ class Task {
     }
   }
 
-  void toggleIsRunning(){
-    if (isRunning)
-      isRunningInt = 0;
-    else
+  void toggleIsRunning(bool b){
+    if (b)
       isRunningInt = 1;
+    else
+      isRunningInt = 0;
   }
 
   void addDuration(Duration diff){

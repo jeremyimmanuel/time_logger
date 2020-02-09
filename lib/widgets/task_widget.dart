@@ -51,11 +51,21 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
+    print(state);
     switch (state) {
       case AppLifecycleState.detached:
         _databaseHelper.updateTask(widget.t);
         break;
+      case AppLifecycleState.paused: // iOS background ?
+        _databaseHelper.updateTask(widget.t);
+        break;
+      case AppLifecycleState.inactive:
+        _databaseHelper.updateTask(widget.t).then((_) => print('updated db'));
+        print('${widget.t.event} isRunning ? ${widget.t.isRunning}');
+        print(DateTime.now().toString());
+        break; 
       default:
+        print(state);
     }
   }
 
@@ -65,9 +75,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
     setState(() {
       _isRunning = true;
     });
-    widget.t.toggleIsRunning();
+    widget.t.toggleIsRunning(true);
     // TODO: find a way to updateTask right before app is killed
-    _databaseHelper.updateTask(widget.t);
+    // _databaseHelper.updateTask(widget.t);
     
   }
 
@@ -89,9 +99,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
     setState(() {
       _isRunning = false;
     });
-    widget.t.toggleIsRunning();
+    widget.t.toggleIsRunning(false);
     // TODO: find a way to updateTask right before app is killed
-    _databaseHelper.updateTask(widget.t);
+    // _databaseHelper.updateTask(widget.t);
   }
 
   @override
