@@ -13,9 +13,10 @@ class NewTask extends StatefulWidget {
 }
 
 class _NewTaskState extends State<NewTask> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
+  DatabaseHelper _databaseHelper = DatabaseHelper();
   TextEditingController _eventController = TextEditingController();
-  String dropDownCat = 'Home';
+  String _dropDownCat = 'Home';
+  bool _startImmediately = true;
 
   @override
   void dispose() {
@@ -28,14 +29,15 @@ class _NewTaskState extends State<NewTask> {
       id: DateTime.now().toString(),
       event: _eventController.text,
       category: _tcFactory(),
+      isRunningInt: _startImmediately ? 1 : 0,
     );
-    await databaseHelper.insertTask(newT);
+    await _databaseHelper.insertTask(newT);
     print('added new task');
     Navigator.of(context).pop();
   }
 
   TaskCategory _tcFactory() {
-    switch (dropDownCat) {
+    switch (_dropDownCat) {
       case 'Home':
         return TaskCategory.HOME;
         break;
@@ -68,7 +70,7 @@ class _NewTaskState extends State<NewTask> {
           ),
           SizedBox(height: 1),
           DropdownButton(
-              value: dropDownCat,
+              value: _dropDownCat,
               icon: Icon(Icons.arrow_drop_down),
               items: ['Home', 'Family', 'Work']
                   .map((v) => DropdownMenuItem<String>(
@@ -78,9 +80,25 @@ class _NewTaskState extends State<NewTask> {
                   .toList(),
               onChanged: (v) {
                 setState(() {
-                  dropDownCat = v;
+                  _dropDownCat = v;
                 });
               }),
+          SizedBox(height: 1),
+          Row(
+            children: <Widget>[
+              Text('Start immediately'),
+              Checkbox(
+                value: _startImmediately,
+                onChanged: (value) {
+                  setState(() {
+                    print(value);
+                    _startImmediately = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 1),
           FloatingActionButton(
             onPressed: _addTask,
             shape: BeveledRectangleBorder(),
