@@ -1,6 +1,6 @@
 # time_logger
 
-A new Flutter project.
+Quick logger app that lets user log multiple times syncrounously.
 
 ## Getting Started
 
