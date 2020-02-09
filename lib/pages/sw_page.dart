@@ -16,23 +16,10 @@ class SWPage extends StatefulWidget {
 class _SWPageState extends State<SWPage> {
   DatabaseHelper _databaseHelper = DatabaseHelper();
 
+  // Holds the task to display
   List<Task> tl = [];
 
   int count = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // print('got to disposed');
-    // for (var t in tl) {
-    //   _databaseHelper.updateTask(t);
-    // }
-    super.dispose();
-  }
 
   void updateListView() {
     final Future<Database> dbFuture = _databaseHelper.initializeDatabase();

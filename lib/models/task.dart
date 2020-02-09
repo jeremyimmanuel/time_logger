@@ -12,6 +12,9 @@ class Task {
   TaskCategory category;
   Duration elapsed;
 
+  // Right before app being killed
+  DateTime lastTime;
+
   // 0 for false, 1 for true
   int isRunningInt;
 
@@ -57,6 +60,10 @@ class Task {
       default:
         return true;
     }
+  }
+
+  void addOneSecond(){
+    elapsed += Duration(seconds: 1);
   }
 
   void toggleIsRunning(bool b){
