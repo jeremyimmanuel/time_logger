@@ -14,7 +14,7 @@ class SWPage extends StatefulWidget {
 }
 
 class _SWPageState extends State<SWPage> {
-  DatabaseHelper databaseHelper = DatabaseHelper();
+  DatabaseHelper _databaseHelper = DatabaseHelper();
 
   List<Task> tl = [];
 
@@ -29,15 +29,15 @@ class _SWPageState extends State<SWPage> {
   void dispose() {
     // print('got to disposed');
     // for (var t in tl) {
-    //   databaseHelper.updateTask(t);
+    //   _databaseHelper.updateTask(t);
     // }
     super.dispose();
   }
 
   void updateListView() {
-    final Future<Database> dbFuture = databaseHelper.initializeDatabase();
+    final Future<Database> dbFuture = _databaseHelper.initializeDatabase();
     dbFuture.then((database) {
-      Future<List<Task>> taskListFuture = databaseHelper.getTaskList();
+      Future<List<Task>> taskListFuture = _databaseHelper.getTaskList();
       taskListFuture.then((taskList) {
         setState(() {
           this.tl = taskList;
@@ -48,7 +48,7 @@ class _SWPageState extends State<SWPage> {
   }
 
   Future<void> removeTaskInDb(String id) async {
-    await databaseHelper.deleteTask(id);
+    await _databaseHelper.deleteTask(id);
   }
 
   void _showAddNewTask() {

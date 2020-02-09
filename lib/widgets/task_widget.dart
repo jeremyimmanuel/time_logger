@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../models/task.dart';
+import '../models/task_list.dart';
 
 class TaskWidget extends StatefulWidget {
   TaskWidget({
@@ -17,6 +18,7 @@ class TaskWidget extends StatefulWidget {
 }
 
 class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
+  DatabaseHelper _databaseHelper = DatabaseHelper();
   String _timeStamp = '00:00:00';
 
   bool _isRunning;
@@ -50,17 +52,8 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     switch (state) {
-      case AppLifecycleState.resumed:
-        print('resumed');
-        break;
-      case AppLifecycleState.inactive:
-        print('inactive');
-        break;
-      case AppLifecycleState.paused:
-        print('paused');
-        break;
       case AppLifecycleState.detached:
-        print('detached');
+        _databaseHelper.updateTask(widget.t);
         break;
       default:
     }
@@ -73,6 +66,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       _isRunning = true;
     });
     widget.t.toggleIsRunning();
+    // TODO: find a way to updateTask right before app is killed
+    _databaseHelper.updateTask(widget.t);
+    
   }
 
   void keeprunning() {
@@ -94,6 +90,8 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       _isRunning = false;
     });
     widget.t.toggleIsRunning();
+    // TODO: find a way to updateTask right before app is killed
+    _databaseHelper.updateTask(widget.t);
   }
 
   @override

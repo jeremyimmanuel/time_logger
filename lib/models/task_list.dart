@@ -1,11 +1,14 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../models/task.dart';
 
+/// DatabaseHelper
+/// 
+/// A helper class that handles writing and reading 
+/// the database in sqllite.
 class DatabaseHelper {
   static DatabaseHelper _databaseHelper;
   static Database _database;
@@ -47,18 +50,21 @@ class DatabaseHelper {
     await db.execute('CREATE TABLE $taskTable ($colId TEXT PRIMARY KEY, $colEvent TEXT, $colCategory TEXT, $colElapsed TEXT, $colIsRunning INTEGER)');
   }
 
+  // get a List of Map representations of tasks
   Future<List<Map<String, dynamic>>> getTaskMapList() async {
     Database db = await this.database;
     var result = await db.query(taskTable, orderBy: '$colId ASC');
     return result;
   }
 
+  // insert a task to the Database
   Future<int> insertTask(Task t) async {
     Database db = await this.database;
     var result = await db.insert(taskTable, t.toMap(),);
     return result;
   }
 
+  // update a task in the database
   Future<int> updateTask(Task t) async {
     var db = await this.database;
     var result = db.update(taskTable, t.toMap(), where: '$colId = ?', whereArgs: [t.id]);
