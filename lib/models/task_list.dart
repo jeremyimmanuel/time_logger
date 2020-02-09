@@ -15,6 +15,7 @@ class DatabaseHelper {
   String colEvent = 'event';
   String colCategory  = 'category';
   String colElapsed = 'elapsed';
+  String colIsRunning = 'isRunningInt';
 
   DatabaseHelper._createInstance();
 
@@ -43,7 +44,7 @@ class DatabaseHelper {
   }
 
   Future<void> _createDB(Database db, int newVersion) async {
-    await db.execute('CREATE TABLE $taskTable ($colId TEXT PRIMARY KEY, $colEvent TEXT, $colCategory TEXT, $colElapsed TEXT)');
+    await db.execute('CREATE TABLE $taskTable ($colId TEXT PRIMARY KEY, $colEvent TEXT, $colCategory TEXT, $colElapsed TEXT, $colIsRunning INTEGER)');
   }
 
   Future<List<Map<String, dynamic>>> getTaskMapList() async {

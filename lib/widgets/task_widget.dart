@@ -16,16 +16,24 @@ class TaskWidget extends StatefulWidget {
   _TaskWidgetState createState() => _TaskWidgetState();
 }
 
-class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver{
+class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   String _timeStamp = '00:00:00';
 
   bool _isRunning;
   final sw = Stopwatch();
   final dur = const Duration(milliseconds: 20);
+  Timer timer;
 
   @override
   void initState() {
     _isRunning = widget.t.isRunning;
+    if (_isRunning) {
+      print('tWidget isrunning true');
+      startSW();
+    } else {
+      print('tWidget isrunning false');
+      stopSW();
+    }
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -33,6 +41,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver{
   @override
   void dispose() {
     sw.stop();
+    timer.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -57,10 +66,8 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver{
     }
   }
 
-  
-
   void startSW() {
-    Timer(dur, keeprunning);
+    timer = Timer(dur, keeprunning);
     sw.start();
     setState(() {
       _isRunning = true;

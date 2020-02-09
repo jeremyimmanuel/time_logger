@@ -11,6 +11,8 @@ class Task {
   String event;
   TaskCategory category;
   Duration elapsed;
+
+  // 0 for false, 1 for true
   int isRunningInt;
 
   Task({
@@ -43,6 +45,7 @@ class Task {
     this.event = m['event'];
     this.category = tcFromString(m['category']);
     this.elapsed = dur;
+    this.isRunningInt = m['isRunningInt'];
   }
 
   bool get isRunning {
@@ -80,22 +83,21 @@ class Task {
     }
   }
 
-  @override
-  String toString() {
-    // TODO: implement toString
-    return super.toString();
-  }
-
+  /// toMap
+  /// 
+  /// Returns a map representation of the Task object
   Map<String, dynamic> toMap(){
+    print(isRunningInt);
     return {
       'id' : id,
       'event' : event,
-      'category' : tcString(), //tcString(),
-      'elapsed' : elapsed.toString(), //elapsed.toString(),
+      'category' : tcString, //tcString(),
+      'elapsed' : elapsed.toString(),
+      'isRunningInt' : isRunningInt, //elapsed.toString(),
     };
   }
 
-  String tcString(){
+  String get tcString{
     switch (category) {
       case TaskCategory.FAMILY:
         return 'Family';
