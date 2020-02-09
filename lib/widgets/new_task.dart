@@ -32,7 +32,6 @@ class _NewTaskState extends State<NewTask> {
       isRunningInt: _startImmediately ? 1 : 0,
     );
     await _databaseHelper.insertTask(newT);
-    print('added new task');
     Navigator.of(context).pop();
   }
 
@@ -91,7 +90,6 @@ class _NewTaskState extends State<NewTask> {
                 value: _startImmediately,
                 onChanged: (value) {
                   setState(() {
-                    print(value);
                     _startImmediately = value;
                   });
                 },

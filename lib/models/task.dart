@@ -87,7 +87,6 @@ class Task {
   /// 
   /// Returns a map representation of the Task object
   Map<String, dynamic> toMap(){
-    print(isRunningInt);
     return {
       'id' : id,
       'event' : event,

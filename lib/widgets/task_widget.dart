@@ -30,10 +30,8 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   void initState() {
     _isRunning = widget.t.isRunning;
     if (_isRunning) {
-      print('tWidget isrunning true');
       startSW();
     } else {
-      print('tWidget isrunning false');
       stopSW();
     }
     super.initState();
@@ -51,7 +49,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    print(state);
+    print(state.toString());
     switch (state) {
       case AppLifecycleState.detached:
         _databaseHelper.updateTask(widget.t);
@@ -65,7 +63,6 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
         print(DateTime.now().toString());
         break; 
       default:
-        print(state);
     }
   }
 
@@ -75,9 +72,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
     setState(() {
       _isRunning = true;
     });
-    widget.t.toggleIsRunning(true);
+    widget.t.toggleIsRunning(_isRunning);
     // TODO: find a way to updateTask right before app is killed
-    // _databaseHelper.updateTask(widget.t);
+    _databaseHelper.updateTask(widget.t);
     
   }
 
@@ -99,9 +96,9 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
     setState(() {
       _isRunning = false;
     });
-    widget.t.toggleIsRunning(false);
+    widget.t.toggleIsRunning(_isRunning);
     // TODO: find a way to updateTask right before app is killed
-    // _databaseHelper.updateTask(widget.t);
+    _databaseHelper.updateTask(widget.t);
   }
 
   @override
