@@ -86,6 +86,10 @@ class Task {
     elapsed += diff;
   }
 
+  void setLastTime(){
+    lastTime = DateTime.now();
+  }
+
   Color get catColor {
     switch (this.category) {
       case TaskCategory.HOME:

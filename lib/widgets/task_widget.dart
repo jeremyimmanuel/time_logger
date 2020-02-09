@@ -21,7 +21,7 @@ class TaskWidget extends StatefulWidget {
 class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   DatabaseHelper _databaseHelper = DatabaseHelper();
   String _timeStamp;
-  
+
   // Dur to display
   Duration _totalDur;
 
@@ -38,9 +38,18 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
 
   @override
   void initState() {
+    _isRunning = widget.t.isRunning;
+    if (widget.t.lastTime != null) {
+      DateTime now = DateTime.now();
+      final Duration deltaDur = now.difference(widget.t.lastTime);
+      print(now.toString());
+      print(widget.t.lastTime.toString());
+      if (_isRunning) 
+        widget.t.addDuration(deltaDur);
+    }
     _totalDur = widget.t.elapsed;
     _timeStamp = _totalDur.toString().split('.')[0].padLeft(8, '0');
-    _isRunning = widget.t.isRunning;
+
     print('new version');
     if (_isRunning) {
       startSW();
@@ -68,14 +77,17 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
         _databaseHelper.updateTask(widget.t);
         break;
       case AppLifecycleState.paused:
-        widget.t.addDuration(_totalDur);
+        widget.t.addDuration(_currDur);
+        widget.t.setLastTime();
         _databaseHelper.updateTask(widget.t);
         break;
       case AppLifecycleState.inactive:
         widget.t.addDuration(_currDur);
+        widget.t.setLastTime();
+        print(widget.t.lastTime.toString());
         _databaseHelper.updateTask(widget.t).then((_) => print('updated db'));
-        print('${widget.t.event} isRunning ? ${widget.t.isRunning}');
-        print(DateTime.now().toString());
+        // print('${widget.t.event} isRunning ? ${widget.t.isRunning}');
+        // print(DateTime.now().toString());
         break;
       default:
     }
@@ -105,7 +117,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       startSW();
     }
     setState(() {
-      print(DateTime.now());
+      // print(DateTime.now());
       _totalDur += Duration(seconds: 1);
       _currDur += Duration(seconds: 1);
       _timeStamp = _totalDur.inHours.toString().padLeft(2, '0') +
