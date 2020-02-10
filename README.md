@@ -5,11 +5,10 @@ Built using Google's Flutter SDK and Dart.
 
 ## Screenshots
 
-## Homepage
-<!-- ![Home Page](screenshots/1.PNG) -->
+### Homepage
 <img src="./screenshots/1.PNG" height=25% width=25%>
 
-## Adding new tasks
+### Adding new tasks
 <img src="./screenshots/2.PNG" height=25% width=25%> <img src="./screenshots/3.PNG" height=25% width=25%> <img src="./screenshots/4.PNG" height=25% width=25%>
 
 
