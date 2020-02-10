@@ -6,7 +6,8 @@ Built using Google's Flutter SDK and Dart.
 ## Screenshots
 
 ## Homepage
-![Home Page](screenshots/1.PNG)
+<!-- ![Home Page](screenshots/1.PNG) -->
+<img src="./screenshots/1.PNG" height=20% width=20%>
 
 ## Adding new tasks
 ![Add Task1](screenshots/2.PNG) {
