@@ -7,15 +7,12 @@ Built using Google's Flutter SDK and Dart.
 
 ## Homepage
 <!-- ![Home Page](screenshots/1.PNG) -->
-<img src="./screenshots/1.PNG" height=20% width=20%>
+<img src="./screenshots/1.PNG" height=25% width=25%>
 
 ## Adding new tasks
-![Add Task1](screenshots/2.PNG) {
-    height: 50%;
-    width: 50;
-}
-![Add Task2](screenshots/3.PNG)
-![Add Task3](screenshots/4.PNG)
+<img src="./screenshots/2.PNG" height=25% width=25%>
+<img src="./screenshots/3.PNG" height=25% width=25%>
+<img src="./screenshots/4.PNG" height=25% width=25%>
 
 
 ## Problems
