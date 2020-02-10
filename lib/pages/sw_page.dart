@@ -71,10 +71,17 @@ class _SWPageState extends State<SWPage> {
               },
               direction: DismissDirection.startToEnd,
               background: Container(
-                child: Center(
+                padding: EdgeInsets.only(
+                  bottom: 10,
+                  top: 10,
+                  left: 10,
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
                   child: Icon(
                     Icons.delete,
                     color: Colors.redAccent,
+                    size: 30,
                   ),
                 ),
                 decoration: BoxDecoration(
@@ -89,8 +96,23 @@ class _SWPageState extends State<SWPage> {
           itemCount: tl.length,
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        heroTag: 'AddTask',
+        child: Icon(
+          Icons.add,
+          color: Colors.black,
+        ),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Colors.black,
+            width: 3,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(15),
+          ),
+        ),
         onPressed: _showAddNewTask,
       ),
     );

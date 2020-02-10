@@ -7,16 +7,21 @@ enum TaskCategory{
 }
 
 class Task {
+  // unique id, usually timestamp Task object was created
   String id;
+
+  // task event
   String event;
+
+  // task category
   TaskCategory category;
+
+  // the amount of time this task has elapsed
   Duration elapsed;
 
   // Right before app being killed
   DateTime lastTime;
-
-  final Stopwatch sw = Stopwatch();
-
+  
   // 0 for false, 1 for true
   int isRunningInt;
 
@@ -27,6 +32,11 @@ class Task {
     this.elapsed = Duration.zero,
     this.isRunningInt = 1,
   });
+
+  // Category colors
+  static Color homeColor = Colors.blue;
+  static Color workColor = Colors.green;
+  static Color familyColor = Colors.red;
 
   Task.fromMap(Map<String, dynamic> m) {
     // 00:00:00.000000
@@ -93,11 +103,24 @@ class Task {
   Color get catColor {
     switch (this.category) {
       case TaskCategory.HOME:
-        return Colors.blue;
+        return homeColor;
       case TaskCategory.WORK:
-        return Colors.green;
+        return workColor;
       case TaskCategory.FAMILY:
-        return Colors.red;
+        return familyColor;
+      default:
+        return Colors.black;
+    }
+  }
+
+  static Color getCatColor(String cat){
+    switch (cat) {
+      case 'Home':
+        return homeColor;
+      case 'Work':
+        return workColor;
+      case 'Family':
+        return familyColor;
       default:
         return Colors.black;
     }

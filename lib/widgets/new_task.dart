@@ -18,6 +18,9 @@ class _NewTaskState extends State<NewTask> {
   String _dropDownCat = 'Home';
   bool _startImmediately = true;
 
+  FocusNode _eventFocusNode = FocusNode();
+  FocusNode _categoryFocusNode = FocusNode();
+
   @override
   void dispose() {
     _eventController.dispose();
@@ -51,58 +54,108 @@ class _NewTaskState extends State<NewTask> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'Add new task',
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          TextField(
-            controller: _eventController,
-            cursorColor: Colors.black,
-          ),
-          SizedBox(height: 1),
-          DropdownButton(
-              value: _dropDownCat,
-              icon: Icon(Icons.arrow_drop_down),
-              items: ['Home', 'Family', 'Work']
-                  .map((v) => DropdownMenuItem<String>(
-                        value: v,
-                        child: Text(v),
-                      ))
-                  .toList(),
-              onChanged: (v) {
-                setState(() {
-                  _dropDownCat = v;
-                });
-              }),
-          SizedBox(height: 1),
-          Row(
-            children: <Widget>[
-              Text('Start immediately'),
-              Checkbox(
-                value: _startImmediately,
-                onChanged: (value) {
-                  setState(() {
-                    _startImmediately = value;
-                  });
-                },
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            // Title
+            Text(
+              'Add new task',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
-            ],
-          ),
-          SizedBox(height: 1),
-          FloatingActionButton(
-            onPressed: _addTask,
-            shape: BeveledRectangleBorder(),
-            child: Icon(Icons.add),
-          ),
-        ],
+            ),
+            // Event Text Field
+            TextField(
+              controller: _eventController,
+              autofocus: true,
+              focusNode: _eventFocusNode,
+              cursorColor: Colors.black,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (s) {
+                _eventFocusNode.unfocus();
+                FocusScope.of(context).requestFocus(_categoryFocusNode);
+              } ,
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(
+                labelText: 'Task',
+              ),
+            ),
+            SizedBox(height: 1),
+            DropdownButton(
+                focusNode: _categoryFocusNode,
+                value: _dropDownCat,
+                icon: Icon(Icons.arrow_drop_down),
+                items: ['Home', 'Family', 'Work']
+                    .map(
+                      (v) => DropdownMenuItem<String>(
+                        value: v,
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              height: 10,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3),
+                                color: Task.getCatColor(v),
+                              ),
+                            ),
+                            SizedBox(width: 3),
+                            Text(v),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (v) {
+                  setState(() {
+                    _dropDownCat = v;
+                  });
+                }),
+            SizedBox(height: 1),
+            Row(
+              children: <Widget>[
+                Text('Start immediately'),
+                Checkbox(
+                  activeColor: Theme.of(context).primaryColor,
+                  value: _startImmediately,
+                  onChanged: (value) {
+                    setState(() {
+                      _startImmediately = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 1),
+            FloatingActionButton.extended(
+              label: Text(
+                'Add',
+                style: Theme.of(context).textTheme.subtitle,
+              ),
+              icon: Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Colors.black,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
+                ),
+              ),
+              onPressed: _addTask,
+            ),
+          ],
+        ),
       ),
     );
   }

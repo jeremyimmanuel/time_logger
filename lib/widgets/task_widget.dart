@@ -44,8 +44,7 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       final Duration deltaDur = now.difference(widget.t.lastTime);
       print(now.toString());
       print(widget.t.lastTime.toString());
-      if (_isRunning) 
-        widget.t.addDuration(deltaDur);
+      if (_isRunning) widget.t.addDuration(deltaDur);
     }
     _totalDur = widget.t.elapsed;
     _timeStamp = _totalDur.toString().split('.')[0].padLeft(8, '0');
@@ -71,7 +70,6 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
-    print(state.toString());
     switch (state) {
       case AppLifecycleState.detached:
         _databaseHelper.updateTask(widget.t);
@@ -84,7 +82,6 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       case AppLifecycleState.inactive:
         widget.t.addDuration(_currDur);
         widget.t.setLastTime();
-        print(widget.t.lastTime.toString());
         _databaseHelper.updateTask(widget.t).then((_) => print('updated db'));
         // print('${widget.t.event} isRunning ? ${widget.t.isRunning}');
         // print(DateTime.now().toString());
@@ -107,7 +104,6 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
         _isRunning = true;
       });
       widget.t.toggleIsRunning(_isRunning);
-      // TODO: find a way to updateTask right before app is killed
       _databaseHelper.updateTask(widget.t);
     }
   }
@@ -134,35 +130,48 @@ class _TaskWidgetState extends State<TaskWidget> with WidgetsBindingObserver {
       _isRunning = false;
     });
     widget.t.toggleIsRunning(_isRunning);
-    // TODO: find a way to updateTask right before app is killed
     _databaseHelper.updateTask(widget.t);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text('$_timeStamp'),
-      subtitle: Row(
-        children: <Widget>[
-          Container(
-            constraints: BoxConstraints.tight(
-              Size(10, 10),
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              color: widget.t.catColor,
-            ),
-          ),
-          SizedBox(width: 5),
-          Text('${widget.t.event}'),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      elevation: 7,
+      margin: EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 15,
       ),
-      trailing: FloatingActionButton(
-        backgroundColor: Colors.grey,
-        child: Icon(
-          _isRunning ? Icons.pause : Icons.play_arrow,
+      child: ListTile(
+        title: Text(
+          '$_timeStamp',
+          style: Theme.of(context).textTheme.body1,
         ),
-        onPressed: _isRunning ? stopSW : startSW,
+        subtitle: Row(
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints.tight(
+                Size(10, 10),
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                color: widget.t.catColor,
+              ),
+            ),
+            SizedBox(width: 5),
+            Text(
+              '${widget.t.event}',
+              style: Theme.of(context).textTheme.subtitle,
+            ),
+          ],
+        ),
+        trailing: FloatingActionButton(
+          backgroundColor: Colors.grey,
+          child: Icon(
+            _isRunning ? Icons.pause : Icons.play_arrow,
+          ),
+          onPressed: _isRunning ? stopSW : startSW,
+        ),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './pages/sw_page.dart';
+import './utils/theme.dart';
 
 
 void main() => runApp(MyApp());
@@ -11,9 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: qtloggerTheme(),
       home: SWPage(),
     );
   }
